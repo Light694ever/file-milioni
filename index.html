@@ -100,9 +100,10 @@
   /* LANG SWITCHER */
   .lang-switcher {
     display: flex;
+    flex-wrap: wrap;
     justify-content: center;
     gap: 8px;
-    padding: 20px 24px;
+    padding: 12px 16px;
     position: sticky;
     top: 0;
     z-index: 100;
@@ -358,10 +359,14 @@
   }
 
   /* RESPONSIVE */
+  @media (max-width: 480px) {
+    .lang-btn { padding: 8px 14px; font-size: 0.75rem; gap: 5px; }
+  }
+
   @media (max-width: 360px) {
     .items-grid { grid-template-columns: 1fr; }
     .bevande-list { grid-template-columns: 1fr; }
-    .lang-btn { padding: 8px 13px; font-size: 0.72rem; }
+    .lang-btn { padding: 7px 11px; font-size: 0.7rem; }
   }
 </style>
 </head>
