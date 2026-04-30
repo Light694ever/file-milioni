@@ -1,0 +1,864 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Filé-Milion — Churrascaria</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Cinzel:wght@400;700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --fire: #FF4500;
+    --gold: #C9A84C;
+    --ember: #FF8C00;
+    --cream: #F5E6C8;
+    --dark: #0A0A0A;
+    --dark2: #111111;
+    --dark3: #1A1A1A;
+    --card: rgba(255,255,255,0.04);
+    --border: rgba(201,168,76,0.25);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--dark);
+    color: var(--cream);
+    font-family: 'Lato', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* FIRE BACKGROUND */
+  body::before {
+    content: '';
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    height: 40vh;
+    background: radial-gradient(ellipse at 50% 100%, rgba(255,69,0,0.18) 0%, rgba(255,140,0,0.08) 40%, transparent 70%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* HEADER */
+  header {
+    position: relative;
+    text-align: center;
+    padding: 48px 24px 32px;
+    border-bottom: 1px solid var(--border);
+    background: linear-gradient(180deg, rgba(201,168,76,0.06) 0%, transparent 100%);
+    overflow: hidden;
+  }
+
+  header::after {
+    content: '';
+    position: absolute;
+    top: 0; left: 50%; transform: translateX(-50%);
+    width: 200px; height: 2px;
+    background: linear-gradient(90deg, transparent, var(--gold), transparent);
+  }
+
+  .logo {
+    width: 120px;
+    height: auto;
+    margin-bottom: 8px;
+    animation: fadeDown 0.8s ease both;
+    filter: drop-shadow(0 4px 16px rgba(201,168,76,0.25));
+  }
+
+  .brand {
+    font-family: 'Cinzel', serif;
+    font-size: clamp(2.4rem, 8vw, 4rem);
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    background: linear-gradient(135deg, var(--gold) 0%, var(--cream) 50%, var(--gold) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: fadeDown 0.8s 0.1s ease both;
+  }
+
+  .subtitle {
+    font-family: 'Lato', sans-serif;
+    font-size: 0.75rem;
+    font-weight: 300;
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    color: var(--ember);
+    margin-top: 4px;
+    animation: fadeDown 0.8s 0.2s ease both;
+  }
+
+  .tagline {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: clamp(0.95rem, 3vw, 1.2rem);
+    color: rgba(245,230,200,0.65);
+    margin-top: 10px;
+    animation: fadeDown 0.8s 0.3s ease both;
+  }
+
+  /* LANG SWITCHER */
+  .lang-switcher {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    padding: 20px 24px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(10,10,10,0.92);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    animation: fadeDown 0.8s 0.4s ease both;
+  }
+
+  .lang-btn {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    padding: 9px 20px;
+    border: 1px solid var(--border);
+    border-radius: 30px;
+    background: transparent;
+    color: rgba(245,230,200,0.55);
+    font-family: 'Lato', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+
+  .lang-btn .flag { font-size: 1.1rem; }
+
+  .lang-btn:hover {
+    border-color: var(--gold);
+    color: var(--cream);
+  }
+
+  .lang-btn.active {
+    background: linear-gradient(135deg, rgba(201,168,76,0.2), rgba(255,140,0,0.15));
+    border-color: var(--gold);
+    color: var(--gold);
+    box-shadow: 0 0 16px rgba(201,168,76,0.2);
+  }
+
+  /* CONTENT */
+  .content {
+    display: none;
+    padding: 0 0 60px;
+    animation: fadeUp 0.4s ease both;
+    position: relative;
+    z-index: 1;
+  }
+
+  .content.active { display: block; }
+
+  /* MENU FISSO HERO */
+  .menu-hero {
+    text-align: center;
+    padding: 36px 24px 28px;
+    border-bottom: 1px solid var(--border);
+    background: linear-gradient(180deg, rgba(255,69,0,0.05) 0%, transparent 100%);
+  }
+
+  .menu-hero h2 {
+    font-family: 'Cinzel', serif;
+    font-size: clamp(1rem, 3.5vw, 1.3rem);
+    letter-spacing: 0.25em;
+    color: var(--gold);
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+
+  .buffet-desc {
+    font-size: 0.85rem;
+    color: rgba(245,230,200,0.6);
+    letter-spacing: 0.05em;
+    line-height: 1.6;
+    max-width: 340px;
+    margin: 0 auto 24px;
+    font-style: italic;
+  }
+
+  .price-cards {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 12px;
+    max-width: 500px;
+    margin: 0 auto;
+  }
+
+  .price-card {
+    flex: 1;
+    min-width: 130px;
+    max-width: 160px;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 16px 12px;
+    background: var(--card);
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.2s;
+  }
+
+  .price-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; height: 2px;
+    background: linear-gradient(90deg, transparent, var(--ember), transparent);
+  }
+
+  .price-card:hover { transform: translateY(-2px); }
+
+  .price-card .label {
+    font-size: 0.65rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: rgba(245,230,200,0.5);
+    margin-bottom: 6px;
+  }
+
+  .price-card .price {
+    font-family: 'Cinzel', serif;
+    font-size: 1.8rem;
+    color: var(--fire);
+    font-weight: 700;
+    line-height: 1;
+  }
+
+  .price-card .price-note {
+    font-size: 0.65rem;
+    color: rgba(245,230,200,0.4);
+    margin-top: 4px;
+  }
+
+  .price-card.gratis .price {
+    color: #4CAF50;
+    font-size: 1.3rem;
+  }
+
+  /* SECTIONS */
+  .section {
+    padding: 28px 20px 0;
+  }
+
+  .section-title {
+    font-family: 'Cinzel', serif;
+    font-size: 0.7rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--ember);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 14px;
+  }
+
+  .section-title::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(90deg, var(--border), transparent);
+  }
+
+  /* ITEMS GRID */
+  .items-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+
+  .items-grid.single { grid-template-columns: 1fr; }
+
+  .item {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 10px 12px;
+    font-size: 0.8rem;
+    color: rgba(245,230,200,0.85);
+    letter-spacing: 0.03em;
+    line-height: 1.3;
+    transition: background 0.2s;
+  }
+
+  .item:hover {
+    background: rgba(201,168,76,0.08);
+  }
+
+  .item .item-price {
+    display: block;
+    color: var(--gold);
+    font-weight: 700;
+    font-size: 0.85rem;
+    margin-top: 3px;
+  }
+
+  /* BEVANDE */
+  .bevande-list {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px;
+  }
+
+  .bev-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 7px 10px;
+    background: var(--card);
+    border-radius: 6px;
+    border: 1px solid rgba(201,168,76,0.12);
+    font-size: 0.75rem;
+  }
+
+  .bev-item .bev-name { color: rgba(245,230,200,0.8); }
+  .bev-item .bev-price { color: var(--gold); font-weight: 700; white-space: nowrap; margin-left: 6px; }
+
+  /* DOLCI */
+  .dolci-list {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  /* DIVIDER */
+  .divider {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--border), transparent);
+    margin: 28px 20px 0;
+  }
+
+  /* FOOTER */
+  footer {
+    text-align: center;
+    padding: 32px 24px;
+    font-size: 0.65rem;
+    letter-spacing: 0.2em;
+    color: rgba(245,230,200,0.2);
+    text-transform: uppercase;
+    border-top: 1px solid var(--border);
+    margin-top: 40px;
+    position: relative;
+    z-index: 1;
+  }
+
+  @keyframes fadeDown {
+    from { opacity: 0; transform: translateY(-14px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* RESPONSIVE */
+  @media (max-width: 360px) {
+    .items-grid { grid-template-columns: 1fr; }
+    .bevande-list { grid-template-columns: 1fr; }
+    .lang-btn { padding: 8px 13px; font-size: 0.72rem; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <img src="logo.png" alt="Filé-Milion Logo" class="logo">
+  <div class="brand">Filé-Milion</div>
+  <div class="subtitle">Churrascaria</div>
+  <div class="tagline">Il vero sapore della griglia Brasiliana</div>
+</header>
+
+<nav class="lang-switcher">
+  <button class="lang-btn active" onclick="setLang('it')"><span class="flag">🇮🇹</span> ITA</button>
+  <button class="lang-btn" onclick="setLang('en')"><span class="flag">🇬🇧</span> ENG</button>
+  <button class="lang-btn" onclick="setLang('ru')"><span class="flag">🇷🇺</span> РУС</button>
+  <button class="lang-btn" onclick="setLang('de')"><span class="flag">🇩🇪</span> DEU</button>
+</nav>
+
+<!-- ═══════════════ ITALIANO ═══════════════ -->
+<div class="content active" id="lang-it">
+
+  <div class="menu-hero">
+    <h2>Menù</h2>
+    <p class="buffet-desc">Buffet brasiliano ricco di piatti tipici e di antipasti caldi e freddi</p>
+    <div class="price-cards">
+      <div class="price-card">
+        <div class="label">Adulto</div>
+        <div class="price">€35</div>
+        <div class="price-note">menù fisso</div>
+      </div>
+      <div class="price-card">
+        <div class="label">Vegetariano</div>
+        <div class="price">€20</div>
+        <div class="price-note">menù fisso</div>
+      </div>
+      <div class="price-card gratis">
+        <div class="label">Bambini 0–5</div>
+        <div class="price">Gratis</div>
+        <div class="price-note">menù fisso</div>
+      </div>
+      <div class="price-card">
+        <div class="label">Bambini 6–10</div>
+        <div class="price">€15</div>
+        <div class="price-note">menù fisso</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Tagli di Manzo</div>
+    <div class="items-grid">
+      <div class="item">Filetto di Manzo</div>
+      <div class="item">Picanha</div>
+      <div class="item">Picanha Nobile Spinacino</div>
+      <div class="item">Manzo in Salsa Verde</div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Tagli di Pollo</div>
+    <div class="items-grid">
+      <div class="item">Coscette di Pollo</div>
+      <div class="item">Cuoricini di Pollo</div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Tagli di Maiale</div>
+    <div class="items-grid">
+      <div class="item">Salsiccia</div>
+      <div class="item">Coppa di Maiale</div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Altri Tagli</div>
+    <div class="items-grid">
+      <div class="item">Involtini di Tacchino con Pancetta</div>
+      <div class="item">Coscia di Agnello</div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Le Specialità</div>
+    <div class="items-grid">
+      <div class="item">Pao de Queijo</div>
+      <div class="item">Coxinha</div>
+      <div class="item">Kipe</div>
+      <div class="item">Pao da Alho</div>
+      <div class="item">Cubetti di Tapioca</div>
+      <div class="item">Polpette di Picanha</div>
+      <div class="item">Ananas Arrosto</div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="section">
+    <div class="section-title">I Nostri Dolci</div>
+    <div class="items-grid">
+      <div class="item">Creme Caramel <span class="item-price">€ 5,00</span></div>
+      <div class="item">Mousse Maracuja <span class="item-price">€ 5,00</span></div>
+      <div class="item">Mousse Lime <span class="item-price">€ 5,00</span></div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="section">
+    <div class="section-title">Bevande</div>
+    <div class="bevande-list">
+      <div class="bev-item"><span class="bev-name">Pestati</span><span class="bev-price">€ 10,00/12,00</span></div>
+      <div class="bev-item"><span class="bev-name">Birra Piccola Bionda</span><span class="bev-price">€ 3,50</span></div>
+      <div class="bev-item"><span class="bev-name">Birra Grande Bionda</span><span class="bev-price">€ 5,00</span></div>
+      <div class="bev-item"><span class="bev-name">Birra Piccola Special</span><span class="bev-price">€ 4,00</span></div>
+      <div class="bev-item"><span class="bev-name">Birra Grande Special</span><span class="bev-price">€ 6,00</span></div>
+      <div class="bev-item"><span class="bev-name">Acqua 0,75</span><span class="bev-price">€ 4,00</span></div>
+      <div class="bev-item"><span class="bev-name">Bibite</span><span class="bev-price">€ 4,00</span></div>
+      <div class="bev-item"><span class="bev-name">Caffè</span><span class="bev-price">€ 1,50</span></div>
+      <div class="bev-item"><span class="bev-name">Cappuccino</span><span class="bev-price">€ 1,80</span></div>
+      <div class="bev-item"><span class="bev-name">Calice</span><span class="bev-price">€ 3,50</span></div>
+      <div class="bev-item"><span class="bev-name">Cocktail Base</span><span class="bev-price">€ 10,00</span></div>
+      <div class="bev-item"><span class="bev-name">Spritz</span><span class="bev-price">€ 4,00</span></div>
+      <div class="bev-item"><span class="bev-name">Amari</span><span class="bev-price">€ 4,00</span></div>
+      <div class="bev-item"><span class="bev-name">Caraffa Birra Bionda</span><span class="bev-price">€ 14,00</span></div>
+      <div class="bev-item"><span class="bev-name">Caraffa Birra Special</span><span class="bev-price">€ 16,00</span></div>
+      <div class="bev-item"><span class="bev-name">Caraffa Spritz</span><span class="bev-price">€ 25,00</span></div>
+      <div class="bev-item"><span class="bev-name">Grappa</span><span class="bev-price">€ 5,00</span></div>
+      <div class="bev-item"><span class="bev-name">Birre Premium</span><span class="bev-price">€ 5,00</span></div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ═══════════════ ENGLISH ═══════════════ -->
+<div class="content" id="lang-en">
+
+  <div class="menu-hero">
+    <h2>Menu</h2>
+    <p class="buffet-desc">Brazilian buffet rich in traditional dishes and hot & cold appetizers</p>
+    <div class="price-cards">
+      <div class="price-card">
+        <div class="label">Adult</div>
+        <div class="price">€35</div>
+        <div class="price-note">set menu</div>
+      </div>
+      <div class="price-card">
+        <div class="label">Vegetarian</div>
+        <div class="price">€20</div>
+        <div class="price-note">set menu</div>
+      </div>
+      <div class="price-card gratis">
+        <div class="label">Children 0–5</div>
+        <div class="price">Free</div>
+        <div class="price-note">set menu</div>
+      </div>
+      <div class="price-card">
+        <div class="label">Children 6–10</div>
+        <div class="price">€15</div>
+        <div class="price-note">set menu</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Beef Cuts</div>
+    <div class="items-grid">
+      <div class="item">Beef Tenderloin</div>
+      <div class="item">Picanha</div>
+      <div class="item">Picanha Nobile Spinacino</div>
+      <div class="item">Beef in Green Sauce</div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Chicken Cuts</div>
+    <div class="items-grid">
+      <div class="item">Chicken Drumsticks</div>
+      <div class="item">Chicken Hearts</div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Pork Cuts</div>
+    <div class="items-grid">
+      <div class="item">Sausage</div>
+      <div class="item">Pork Neck</div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Other Cuts</div>
+    <div class="items-grid">
+      <div class="item">Turkey Rolls with Bacon</div>
+      <div class="item">Leg of Lamb</div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Specialities</div>
+    <div class="items-grid">
+      <div class="item">Pão de Queijo<br><small style="opacity:0.5;font-size:0.7rem">cheese bread</small></div>
+      <div class="item">Coxinha<br><small style="opacity:0.5;font-size:0.7rem">chicken croquette</small></div>
+      <div class="item">Kipe<br><small style="opacity:0.5;font-size:0.7rem">stuffed bulgur</small></div>
+      <div class="item">Pão de Alho<br><small style="opacity:0.5;font-size:0.7rem">garlic bread</small></div>
+      <div class="item">Tapioca Cubes</div>
+      <div class="item">Picanha Meatballs</div>
+      <div class="item">Roasted Pineapple</div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="section">
+    <div class="section-title">Desserts</div>
+    <div class="items-grid">
+      <div class="item">Crème Caramel <span class="item-price">€ 5.00</span></div>
+      <div class="item">Passion Fruit Mousse <span class="item-price">€ 5.00</span></div>
+      <div class="item">Lime Mousse <span class="item-price">€ 5.00</span></div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="section">
+    <div class="section-title">Drinks</div>
+    <div class="bevande-list">
+      <div class="bev-item"><span class="bev-name">Crushed Fruit Drinks</span><span class="bev-price">€ 10.00/12.00</span></div>
+      <div class="bev-item"><span class="bev-name">Small Blonde Beer</span><span class="bev-price">€ 3.50</span></div>
+      <div class="bev-item"><span class="bev-name">Large Blonde Beer</span><span class="bev-price">€ 5.00</span></div>
+      <div class="bev-item"><span class="bev-name">Small Special Beer</span><span class="bev-price">€ 4.00</span></div>
+      <div class="bev-item"><span class="bev-name">Large Special Beer</span><span class="bev-price">€ 6.00</span></div>
+      <div class="bev-item"><span class="bev-name">Water 0.75L</span><span class="bev-price">€ 4.00</span></div>
+      <div class="bev-item"><span class="bev-name">Soft Drinks</span><span class="bev-price">€ 4.00</span></div>
+      <div class="bev-item"><span class="bev-name">Coffee</span><span class="bev-price">€ 1.50</span></div>
+      <div class="bev-item"><span class="bev-name">Cappuccino</span><span class="bev-price">€ 1.80</span></div>
+      <div class="bev-item"><span class="bev-name">Glass of Wine</span><span class="bev-price">€ 3.50</span></div>
+      <div class="bev-item"><span class="bev-name">Cocktail</span><span class="bev-price">€ 10.00</span></div>
+      <div class="bev-item"><span class="bev-name">Spritz</span><span class="bev-price">€ 4.00</span></div>
+      <div class="bev-item"><span class="bev-name">Digestifs</span><span class="bev-price">€ 4.00</span></div>
+      <div class="bev-item"><span class="bev-name">Blonde Beer Pitcher</span><span class="bev-price">€ 14.00</span></div>
+      <div class="bev-item"><span class="bev-name">Special Beer Pitcher</span><span class="bev-price">€ 16.00</span></div>
+      <div class="bev-item"><span class="bev-name">Spritz Pitcher</span><span class="bev-price">€ 25.00</span></div>
+      <div class="bev-item"><span class="bev-name">Grappa</span><span class="bev-price">€ 5.00</span></div>
+      <div class="bev-item"><span class="bev-name">Premium Beers</span><span class="bev-price">€ 5.00</span></div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ═══════════════ РУССКИЙ ═══════════════ -->
+<div class="content" id="lang-ru">
+
+  <div class="menu-hero">
+    <h2>Меню</h2>
+    <p class="buffet-desc">Бразильский шведский стол с традиционными блюдами и горячими и холодными закусками</p>
+    <div class="price-cards">
+      <div class="price-card">
+        <div class="label">Взрослый</div>
+        <div class="price">€35</div>
+        <div class="price-note">фиксированное меню</div>
+      </div>
+      <div class="price-card">
+        <div class="label">Вегетарианское</div>
+        <div class="price">€20</div>
+        <div class="price-note">фиксированное меню</div>
+      </div>
+      <div class="price-card gratis">
+        <div class="label">Дети 0–5 лет</div>
+        <div class="price">Бесплатно</div>
+        <div class="price-note">фиксированное меню</div>
+      </div>
+      <div class="price-card">
+        <div class="label">Дети 6–10 лет</div>
+        <div class="price">€15</div>
+        <div class="price-note">фиксированное меню</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Говядина</div>
+    <div class="items-grid">
+      <div class="item">Говяжья вырезка</div>
+      <div class="item">Пиканья</div>
+      <div class="item">Пиканья Нобиле Спиначино</div>
+      <div class="item">Говядина в зелёном соусе</div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Курица</div>
+    <div class="items-grid">
+      <div class="item">Куриные голени</div>
+      <div class="item">Куриные сердечки</div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Свинина</div>
+    <div class="items-grid">
+      <div class="item">Колбаса</div>
+      <div class="item">Свиная шея</div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Другие блюда на гриле</div>
+    <div class="items-grid">
+      <div class="item">Рулетики из индейки с беконом</div>
+      <div class="item">Бараньи ножки</div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Фирменные блюда</div>
+    <div class="items-grid">
+      <div class="item">Пау-ди-Кейжу<br><small style="opacity:0.5;font-size:0.7rem">сырный хлеб</small></div>
+      <div class="item">Кошинья<br><small style="opacity:0.5;font-size:0.7rem">куриные крокеты</small></div>
+      <div class="item">Кипе<br><small style="opacity:0.5;font-size:0.7rem">котлеты из булгура</small></div>
+      <div class="item">Пау-ди-Алью<br><small style="opacity:0.5;font-size:0.7rem">чесночный хлеб</small></div>
+      <div class="item">Кубики тапиоки</div>
+      <div class="item">Котлеты из пиканьи</div>
+      <div class="item">Жареный ананас</div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="section">
+    <div class="section-title">Десерты</div>
+    <div class="items-grid">
+      <div class="item">Крем-карамель <span class="item-price">€ 5,00</span></div>
+      <div class="item">Мусс маракуйя <span class="item-price">€ 5,00</span></div>
+      <div class="item">Мусс лайм <span class="item-price">€ 5,00</span></div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="section">
+    <div class="section-title">Напитки</div>
+    <div class="bevande-list">
+      <div class="bev-item"><span class="bev-name">Фруктовые коктейли</span><span class="bev-price">€ 10,00/12,00</span></div>
+      <div class="bev-item"><span class="bev-name">Светлое пиво малое</span><span class="bev-price">€ 3,50</span></div>
+      <div class="bev-item"><span class="bev-name">Светлое пиво большое</span><span class="bev-price">€ 5,00</span></div>
+      <div class="bev-item"><span class="bev-name">Специальное пиво малое</span><span class="bev-price">€ 4,00</span></div>
+      <div class="bev-item"><span class="bev-name">Специальное пиво большое</span><span class="bev-price">€ 6,00</span></div>
+      <div class="bev-item"><span class="bev-name">Вода 0,75л</span><span class="bev-price">€ 4,00</span></div>
+      <div class="bev-item"><span class="bev-name">Безалкогольные</span><span class="bev-price">€ 4,00</span></div>
+      <div class="bev-item"><span class="bev-name">Кофе</span><span class="bev-price">€ 1,50</span></div>
+      <div class="bev-item"><span class="bev-name">Капучино</span><span class="bev-price">€ 1,80</span></div>
+      <div class="bev-item"><span class="bev-name">Бокал вина</span><span class="bev-price">€ 3,50</span></div>
+      <div class="bev-item"><span class="bev-name">Коктейль</span><span class="bev-price">€ 10,00</span></div>
+      <div class="bev-item"><span class="bev-name">Шприц</span><span class="bev-price">€ 4,00</span></div>
+      <div class="bev-item"><span class="bev-name">Биттеры</span><span class="bev-price">€ 4,00</span></div>
+      <div class="bev-item"><span class="bev-name">Кувшин светлого пива</span><span class="bev-price">€ 14,00</span></div>
+      <div class="bev-item"><span class="bev-name">Кувшин специального пива</span><span class="bev-price">€ 16,00</span></div>
+      <div class="bev-item"><span class="bev-name">Кувшин шприца</span><span class="bev-price">€ 25,00</span></div>
+      <div class="bev-item"><span class="bev-name">Граппа</span><span class="bev-price">€ 5,00</span></div>
+      <div class="bev-item"><span class="bev-name">Пиво премиум</span><span class="bev-price">€ 5,00</span></div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ═══════════════ DEUTSCH ═══════════════ -->
+<div class="content" id="lang-de">
+
+  <div class="menu-hero">
+    <h2>Speisekarte</h2>
+    <p class="buffet-desc">Brasilianisches Buffet mit traditionellen Gerichten und warmen & kalten Vorspeisen</p>
+    <div class="price-cards">
+      <div class="price-card">
+        <div class="label">Erwachsene</div>
+        <div class="price">€35</div>
+        <div class="price-note">Festmenü</div>
+      </div>
+      <div class="price-card">
+        <div class="label">Vegetarisch</div>
+        <div class="price">€20</div>
+        <div class="price-note">Festmenü</div>
+      </div>
+      <div class="price-card gratis">
+        <div class="label">Kinder 0–5</div>
+        <div class="price">Gratis</div>
+        <div class="price-note">Festmenü</div>
+      </div>
+      <div class="price-card">
+        <div class="label">Kinder 6–10</div>
+        <div class="price">€15</div>
+        <div class="price-note">Festmenü</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Rindfleisch</div>
+    <div class="items-grid">
+      <div class="item">Rinderfilet</div>
+      <div class="item">Picanha</div>
+      <div class="item">Picanha Nobile Spinacino</div>
+      <div class="item">Rind in grüner Soße</div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Hühnchen</div>
+    <div class="items-grid">
+      <div class="item">Hähnchenkeulen</div>
+      <div class="item">Hähnchenherzen</div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Schweinefleisch</div>
+    <div class="items-grid">
+      <div class="item">Wurst</div>
+      <div class="item">Schweinenacken</div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Weitere Grillgerichte</div>
+    <div class="items-grid">
+      <div class="item">Putenröllchen mit Speck</div>
+      <div class="item">Lammkeule</div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Spezialitäten</div>
+    <div class="items-grid">
+      <div class="item">Pão de Queijo<br><small style="opacity:0.5;font-size:0.7rem">Käsebrot</small></div>
+      <div class="item">Coxinha<br><small style="opacity:0.5;font-size:0.7rem">Hähnchenkroketten</small></div>
+      <div class="item">Kipe<br><small style="opacity:0.5;font-size:0.7rem">gefüllte Bulgurbällchen</small></div>
+      <div class="item">Pão de Alho<br><small style="opacity:0.5;font-size:0.7rem">Knoblauchbrot</small></div>
+      <div class="item">Tapioka-Würfel</div>
+      <div class="item">Picanha-Fleischbällchen</div>
+      <div class="item">Gegrillte Ananas</div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="section">
+    <div class="section-title">Desserts</div>
+    <div class="items-grid">
+      <div class="item">Crème Caramel <span class="item-price">€ 5,00</span></div>
+      <div class="item">Maracuja-Mousse <span class="item-price">€ 5,00</span></div>
+      <div class="item">Limetten-Mousse <span class="item-price">€ 5,00</span></div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="section">
+    <div class="section-title">Getränke</div>
+    <div class="bevande-list">
+      <div class="bev-item"><span class="bev-name">Fruchtcocktails</span><span class="bev-price">€ 10,00/12,00</span></div>
+      <div class="bev-item"><span class="bev-name">Kleines Helles Bier</span><span class="bev-price">€ 3,50</span></div>
+      <div class="bev-item"><span class="bev-name">Großes Helles Bier</span><span class="bev-price">€ 5,00</span></div>
+      <div class="bev-item"><span class="bev-name">Kleines Special Bier</span><span class="bev-price">€ 4,00</span></div>
+      <div class="bev-item"><span class="bev-name">Großes Special Bier</span><span class="bev-price">€ 6,00</span></div>
+      <div class="bev-item"><span class="bev-name">Wasser 0,75l</span><span class="bev-price">€ 4,00</span></div>
+      <div class="bev-item"><span class="bev-name">Softdrinks</span><span class="bev-price">€ 4,00</span></div>
+      <div class="bev-item"><span class="bev-name">Kaffee</span><span class="bev-price">€ 1,50</span></div>
+      <div class="bev-item"><span class="bev-name">Cappuccino</span><span class="bev-price">€ 1,80</span></div>
+      <div class="bev-item"><span class="bev-name">Weinglas</span><span class="bev-price">€ 3,50</span></div>
+      <div class="bev-item"><span class="bev-name">Cocktail</span><span class="bev-price">€ 10,00</span></div>
+      <div class="bev-item"><span class="bev-name">Spritz</span><span class="bev-price">€ 4,00</span></div>
+      <div class="bev-item"><span class="bev-name">Digestif</span><span class="bev-price">€ 4,00</span></div>
+      <div class="bev-item"><span class="bev-name">Krug Helles Bier</span><span class="bev-price">€ 14,00</span></div>
+      <div class="bev-item"><span class="bev-name">Krug Special Bier</span><span class="bev-price">€ 16,00</span></div>
+      <div class="bev-item"><span class="bev-name">Krug Spritz</span><span class="bev-price">€ 25,00</span></div>
+      <div class="bev-item"><span class="bev-name">Grappa</span><span class="bev-price">€ 5,00</span></div>
+      <div class="bev-item"><span class="bev-name">Premium Biere</span><span class="bev-price">€ 5,00</span></div>
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  © Filé-Milion Churrascaria &nbsp;·&nbsp; Il vero sapore della driglia Brasiliana
+</footer>
+
+<script>
+  function setLang(lang) {
+    document.querySelectorAll('.content').forEach(el => el.classList.remove('active'));
+    document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
+    document.getElementById('lang-' + lang).classList.add('active');
+    event.currentTarget.classList.add('active');
+    document.documentElement.lang = lang;
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+</script>
+
+</body>
+</html>
